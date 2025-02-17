@@ -93,6 +93,12 @@
                     <i class="fas fa-wallet mr-2"></i>Daftar Pememasanan
                 </a>
             </li>
+            <hr class="white">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.sales_reports.index') }}">
+                    <i class="fas fa-file-invoice-dollar mr-2"></i>Laporan Penjualan
+                </a>
+            </li>
             <hr>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('admin.users') }}">
@@ -146,12 +152,14 @@
         </div>
     </div>
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @include('sweetalert::alert')
     @yield('scripts')
+    @stack('js')
 </body>
 
 </html>

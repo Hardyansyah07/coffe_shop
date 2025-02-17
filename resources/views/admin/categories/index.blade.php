@@ -77,7 +77,7 @@
                             <label for="nama">Nama Kategori</label>
                             <input type="text" id="nama" name="nama" class="form-control" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Tambah Kategori</button>
+                        <button type="submit" class="btn btn-primary">+ Tambah Kategori</button>
                     </form>
                 </div>
             </div>

@@ -28,7 +28,7 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|min:5|unique:menus,nama', // Menambahkan validasi unik
+            'nama' => 'required|min:5|unique:menus,nama',
             'harga' => 'required|numeric',
             'image' => 'required|image|mimes:jpeg,jpg,png|max:2048',
             'deskripsi' => 'required|min:10',
@@ -54,12 +54,20 @@ class MenuController extends Controller
         return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil ditambahkan!');
     }
 
+    // Fungsi untuk menampilkan halaman edit menu
+    public function edit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $categories = Category::all(); // Ambil semua kategori untuk dropdown
+        return view('admin.menu.edit', compact('menu', 'categories'));
+    }
+
     // Fungsi untuk mengupdate menu
     public function update(Request $request, $id)
     {
         // Validasi input
         $request->validate([
-            'nama' => 'required|min:5|unique:menus,nama,' . $id, // Menambahkan validasi unik dengan pengecualian ID
+            'nama' => 'required|min:5|unique:menus,nama,' . $id,
             'harga' => 'required|numeric',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048',
             'deskripsi' => 'required|min:10',
@@ -90,19 +98,27 @@ class MenuController extends Controller
 
     // Fungsi untuk menghapus menu
     public function destroy($id)
-{
-    $menu = Menu::findOrFail($id);
+    {
+        $menu = Menu::findOrFail($id);
 
-    // Hapus gambar jika ada
-    if ($menu->image && Storage::exists('public/menus/' . $menu->image)) {
-        Storage::delete('public/menus/' . $menu->image);
+        // Hapus gambar dari storage jika ada
+        if ($menu->image) {
+            Storage::delete('public/menus/' . $menu->image);
+        }
+
+        $menu->delete(); // Hapus menu dari database
+
+        return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil dihapus!');
     }
-
-    $menu->delete();
-
-    return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil dihapus!');
-}
-
+    public function toggleStatus($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $menu->is_active = !$menu->is_active; // Toggle nilai is_active
+        $menu->save();
+    
+        return response()->json(['success' => true, 'is_active' => $menu->is_active]);
+    }
+    
     // Fungsi checkout
     public function checkout(Request $request)
     {
@@ -111,73 +127,13 @@ class MenuController extends Controller
         return redirect()->route('confirmation');
     }
 
-    public function edit($id)
-{
-    $menu = Menu::findOrFail($id);
-    $categories = Category::all(); // Ambil semua kategori untuk dropdown
-    return view('admin.menu.edit', compact('menu', 'categories'));
-}
-
     // Fungsi untuk menampilkan menu di frontend
-    public function showFrontendMenu()
+        public function showFrontendMenu()
     {
-        $menus = Menu::where('is_active', true)->get();
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
         $categories = Category::all();
+        
         return view('frontend.menu', compact('menus', 'categories'));  // Kirim ke tampilan
     }
-
-    public function showFrontendMakanan()
-    {
-        $menus = Menu::where('category_id', '5')->get();
-        return view('frontend.makanan', compact('menus'));  // Kirim ke tampilan
-    }
-
-    public function showFrontendCemilan()
-    {
-        $menus = Menu::where('category_id', '6')->get();
-        return view('frontend.cemilan', compact('menus'));  // Kirim ke tampilan
-    }
-
-    public function showFrontendDessert()
-    {
-        $menus = Menu::where('category_id', '7')->get();
-        return view('frontend.dessert', compact('menus'));  // Kirim ke tampilan
-    }
-
-    // Fungsi untuk menampilkan menu minuman
-    public function showFrontendKopi()
-    {
-        $menus = Menu::where('category_id', '1')->get();
-        return view('frontend.kopi', compact('menus'));  // Kirim ke tampilan
-    }
-
-    public function showFrontendNonkopi()
-    {
-        $menus = Menu::where('category_id', '2')->get();
-        return view('frontend.nonkopi', compact('menus'));  // Kirim ke tampilan
-    }
-
-    public function showFrontendMinuman()
-    {
-        $menus = Menu::where('category_id', '3')->get();
-        return view('frontend.minuman', compact('menus'));  // Kirim ke tampilan
-    }
-
-    public function showFrontendPaket()
-    {
-        $menus = Menu::where('category_id', '8')->get();
-
-        return view('frontend.paket', compact('menus'));  // Kirim ke tampilan
-    }
-
-    public function toggle($id)
-    {
-        $menu = Menu::findOrFail($id);
-        $menu->update(['is_active' => !$menu->is_active]);
-
-        $status = $menu->is_active ? 'diaktifkan' : 'dinonaktifkan';
-        return redirect()->route('admin.menu.index')->with('success', "Menu berhasil $status!");
-    }
-
-    
 }

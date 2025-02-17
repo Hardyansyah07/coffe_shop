@@ -20,7 +20,7 @@ class CreateMenusTable extends Migration
             $table->integer('harga');
             $table->string('image');
             $table->string('category_id');
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
     }

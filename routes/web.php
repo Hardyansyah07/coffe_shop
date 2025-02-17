@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\WeeklyRevenueReportController;
 use Illuminate\Support\Facades\Auth;
 
 // Autentikasi
@@ -76,8 +78,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
         'update' => 'admin.menu.update',
         'destroy' => 'admin.menu.destroy',
     ]);
-
-    Route::patch('/menu/{id}/toggle', [MenuController::class, 'toggle'])->name('admin.menu.toggle');
+    Route::post('/admin/menu/{id}/toggle-status',  [MenuController::class, 'toggleStatus'])->name('admin.menu.toggleStatus');
 
     // Rute untuk Kategori (Mengelola kategori)
     Route::resource('/categories', CategoryController::class)->names([
@@ -96,6 +97,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::post('/orders/{id}/update-status', [OrderController::class, 'updateOrderStatus'])->name('orders.updateStatus');
 
 
+    Route::get('/sales-reports', [SalesReportController::class, 'index'])->name('admin.sales_reports.index');
+    Route::post('/sales-reports/generate', [SalesReportController::class, 'generateReport'])->name('sales_reports.generate');
+
+
     // Rute untuk melihat item pesanan berdasarkan ID
     Route::get('/orders/{id}/items', [AdminController::class, 'showOrderItems'])->name('admin.orders.items.show');
 
@@ -106,4 +111,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function 
     Route::get('/users', [AdminController::class, 'userIndex'])->name('admin.users'); // Route for listing users
     Route::post('/users/{id}/role', [AdminController::class, 'updateUser Role'])->name('admin.users.updateRole'); // Route for updating user role
     Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy'); // Route for deleting a user
+
+    Route::get('/weekly-report', [WeeklyRevenueReportController::class, 'index'])->name('weekly.report');
+
 });
