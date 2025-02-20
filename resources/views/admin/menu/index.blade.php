@@ -16,6 +16,14 @@
                     <div class="d-flex">
                         <form action="{{ route('admin.menu.index') }}" method="GET" class="d-flex">
                             <input type="text" name="search" class="form-control" placeholder="Search menu..." value="{{ request('search') }}" oninput="this.form.submit()">
+                            <select name="category" class="form-control ml-2" onchange="this.form.submit()">
+                                <option value="">All Categories</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </form>
                         <a href="{{ route('admin.menu.create') }}" class="btn btn-outline-light ml-2">
                             <i class="fas fa-plus mr-1"></i> Add New Menu
@@ -40,7 +48,7 @@
                             </thead>
                             <tbody>
                                 @forelse ($menu as $data)
-                                    @if(stripos($data->nama, request('search')) !== false || empty(request('search')))
+                                    @if((stripos($data->nama, request('search')) !== false || empty(request('search'))) && (empty(request('category')) || $data->category_id == request('category')))
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td class="font-weight-bold">{{ $data->nama }}</td>
@@ -51,7 +59,7 @@
                                         <td>
                                             <img src="{{ asset('/storage/menus/' . $data->image) }}" class="menu-image" alt="{{ $data->nama }}">
                                         </td>
-                                        <td>{{ $data->category_id }}</td>
+                                        <td>{{ optional($data->categories)->nama ?? 'No Category' }}</td>
                                         <td>
                                             <button class="btn btn-sm btn-toggle-status {{ $data->is_active ? 'btn-success' : 'btn-danger' }}" 
                                                     data-id="{{ $data->id }}">
@@ -98,27 +106,22 @@
 @endsection
 
 @push("js")
-
 <script>
 $(document).ready(function() {
     $(document).on('click', '.btn-toggle-status', function() {
         let button = $(this);
         let menuId = button.data('id');
 
-        // Gunakan Laravel route helper dan ganti :id dengan menuId
         let url = "{{ route('admin.menu.toggleStatus', ':id') }}".replace(':id', menuId);
 
         $.ajax({
-            url: url, // Menggunakan route Laravel
+            url: url,
             type: 'POST',
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                console.log('Response dari server:', response); // Debugging response
-
                 if (response.success) {
-                    // Toggle class tombol
                     button.toggleClass('btn-success btn-danger');
                     button.text(response.is_active ? 'ON' : 'OFF');
                 } else {
@@ -126,12 +129,11 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error:', xhr.responseText); // Debugging error
+                console.error('Error:', xhr.responseText);
                 alert('Terjadi kesalahan. Cek console.');
             }
         });
     });
 });
-
 </script>
 @endpush

@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Menu;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
     public function showFrontendCheckout()
-    {
-        return view('frontend.checkout');
-    }
+{
+    $menus = Menu::all(); // Pastikan model Menu sudah diimpor
+    return view('frontend.checkout', compact('menus'));
+}
 
     public function confirmation(Request $request)
 {

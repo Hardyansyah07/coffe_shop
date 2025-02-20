@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Cafe Senja</title>
+    <title>Checkout - Cafe KuyBrew</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -27,101 +27,92 @@
     <!-- Header at the top of the page -->
     <header class="bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 text-white py-4 text-center w-full">
         <button onclick="window.location.href='/'" class="font-bold text-5xl text-shadow-lg mb-4 focus:outline-none hover:bg-opacity-80 transition duration-300 p-2 rounded">
-            Cafe Senja
+        <i class="fas fa-coffee mr-2"></i>Cafe KuyBrew
         </button>
     </header>
 
     <!-- Main container centered on the page -->
-    <div class="w-full max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-xl mt-8">
-        <h1 class="text-3xl font-serif text-primary text-center mb-8">
-            <i class="fas fa-shopping-bag me-2"></i> Checkout
-        </h1>
-
-        <div class="bg-gradient-to-r from-white to-gray-100 p-6 rounded-xl border border-gray-200 mb-8">
-            <h2 class="text-2xl text-secondary font-serif mb-6">
-                <i class="fas fa-receipt me-2"></i> Ringkasan Pesanan
-            </h2>
-            <div id="orderItems" class="space-y-4"></div>
-            <div class="flex justify-between border-t pt-4">
-                <span class="text-lg font-semibold">Total:</span>
-                <span id="orderTotal" class="text-lg font-semibold">Rp 0</span>
+    <div class="max-w-7xl w-full bg-white p-6 rounded-lg shadow-lg mt-6 flex flex-col md:flex-row gap-6">
+        
+            <!-- Bagian kiri: Daftar Pesanan -->
+            <div class="w-full md:w-2/3">
+                <h2 class="text-2xl font-semibold mb-4">Ringkasan Pesanan</h2>
+                <div id="orderItems" class="space-y-4"></div>
+            </div>
+            <!-- Bagian kanan: Total dan Formulir -->
+            <div class="w-full md:w-1/3 bg-gray-50 p-6 rounded-lg">
+                <div class="mb-4 border-b pb-2">
+                    <p id="orderTotal" class="text-xl font-bold">Rp 0</p>
+                </div>
+                
+                <form id="checkoutForm" class="space-y-4">
+                    <div>
+                        <label class="block font-medium">Nama:</label>
+                        <input type="text" id="name" name="name" class="w-full p-2 border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block font-medium">No. Meja:</label>
+                        <select id="no_meja" name="no_meja" class="w-full p-2 border rounded" required>
+                            <option value="" disabled selected>Pilih Nomor Meja</option>
+                            @for ($i = 1; $i <= 20; $i++) <!-- Sesuaikan jumlah meja -->
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium">Metode Pembayaran:</label>
+                        <select id="paymentMethod" name="paymentMethod" class="w-full p-2 border rounded" required>
+                            <option value="">Pilih Metode</option>
+                            <option value="cash">Cash</option>
+                            <option value="bank_transfer">Transfer Bank</option>
+                            <option value="e_wallet">E-Wallet</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full p-4 bg-gradient-to-br from-[#4b2c01] to-[#8B4513] text-white rounded-full text-lg font-medium shadow-lg transform transition-all duration-300 hover:translate-y-[-2px]">
+                        Konfirmasi Pesanan
+                    </button>
+                </form>
             </div>
         </div>
-
-        <form id="checkoutForm">
-            <div class="space-y-6">
-                <div class="form-group">
-                    <label for="name" class="text-lg font-medium text-text mb-2">
-                        <i class="fas fa-user me-2"></i> Nama:
-                    </label>
-                    <input type="text" id="name" name="name" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" required placeholder="Masukkan nama lengkap">
-                </div>
- 
-                <div class="form-group">
-                    <label for="phone" class="text-lg font-medium text-text mb-2">
-                        <i class="fas fa-chair me-2"></i> No. meja:
-                    </label>
-                    <input type="number" id="no_meja" name="no_meja" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" required placeholder="Masukkan nomor telepon">
-                </div>
-
-
-                <div class="form-group">
-                    <label for="paymentMethod" class="text-lg font-medium text-text mb-2">
-                        <i class="fas fa-credit-card me-2"></i> Metode Pembayaran:
-                    </label>
-                    <select id="paymentMethod" name="paymentMethod" class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent" required>
-                        <option value="">Pilih Metode Pembayaran</option>
-                        <option value="cash">Cash</option>
-                        <option value="bank_transfer">Transfer Bank</option>
-                        <option value="e_wallet">E-Wallet</option>
-                    </select>
-                </div>
-
                 <!-- Modal untuk metode pembayaran -->
-<div id="paymentMethodModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-96 mx-auto">
-        <h2 class="text-xl font-bold mb-4">Metode Pembayaran</h2>
-        
-        <div id="bankTransferForm" class="hidden">
-            <label class="block mb-2">Nama Bank:</label>
-            <input type="text" id="bankName" name="bankName" class="w-full p-2 border rounded mb-3">
-            
-            <label class="block mb-2">Nomor Rekening:</label>
-            <input type="text" id="accountNumber" name="accountNumber" class="w-full p-2 border rounded">
-        </div>
-        
-        <div id="eWalletForm" class="hidden">
-            <label class="block mb-2">Provider E-Wallet:</label>
-            <select id="eWalletProvider" name="eWalletProvider" class="w-full p-2 border rounded mb-3">
-                <option value="">Pilih Provider</option>
-                <option value="gopay">Gopay</option>
-                <option value="ovo">OVO</option>
-                <option value="dana">DANA</option>
-                <option value="linkaja">LinkAja</option>
-            </select>
-            
-            <label class="block mb-2">Nomor E-Wallet:</label>
-            <input type="text" id="eWalletNumber" name="eWalletNumber" class="w-full p-2 border rounded">
-        </div>
-        
-        <div class="flex justify-end mt-4">
-            <button type="button" id="closeModal" class="px-4 py-2 bg-gray-300 rounded">Batal</button>
-            <button type="button" id="savePayment" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Simpan</button>
-        </div>
-    </div>
-</div>
-
-<button type="submit" class="w-full p-4 bg-gradient-to-br from-[#4b2c01] to-[#8B4513] text-white rounded-full text-lg font-medium shadow-lg transform transition-all duration-300 hover:translate-y-[-2px]">
-                    Konfirmasi Pesanan
-                </button>
+                <div id="paymentMethodModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-96 mx-auto">
+                        <h2 class="text-xl font-bold mb-4">Metode Pembayaran</h2>
+                        
+                        <div id="bankTransferForm" class="hidden">
+                            <label class="block mb-2">Nama Bank:</label>
+                            <input type="text" id="bankName" name="bankName" class="w-full p-2 border rounded mb-3">
+                            
+                            <label class="block mb-2">Nomor Rekening:</label>
+                            <input type="number" id="accountNumber" name="accountNumber" class="w-full p-2 border rounded">
+                        </div>
+                        
+                        <div id="eWalletForm" class="hidden">
+                            <label class="block mb-2">Provider E-Wallet:</label>
+                            <select id="eWalletProvider" name="eWalletProvider" class="w-full p-2 border rounded mb-3">
+                                <option value="">Pilih Provider</option>
+                                <option value="gopay">Gopay</option>
+                                <option value="ovo">OVO</option>
+                                <option value="dana">DANA</option>
+                            </select>
+                            
+                            <label class="block mb-2">Nomor Handphone:</label>
+                            <input type="tel" id="eWalletNumber" name="eWalletNumber" class="w-full p-2 border rounded" value="+62" onfocus="addPrefix()" oninput="preventDeletePrefix()">
+                        </div>
+                        
+                        <div class="flex justify-end mt-4">
+                            <button type="button" id="closeModal" class="px-4 py-2 bg-gray-300 rounded">Batal</button>
+                            <button type="button" id="savePayment" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Simpan</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
-
     </div>
 
     <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+    const checkoutData = JSON.parse(localStorage.getItem('checkoutData')) || { items: [] };
     const orderItemsContainer = document.getElementById('orderItems');
     const orderTotalElement = document.getElementById('orderTotal');
     const paymentMethodSelect = document.getElementById('paymentMethod');
@@ -132,26 +123,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const savePaymentButton = document.getElementById('savePayment');
 
     if (checkoutData && checkoutData.items.length > 0) {
-        checkoutData.items.forEach(item => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'flex justify-between border-b py-2';
-            const itemTotal = calculateItemPrice(item.harga, item.size) * item.quantity;
-            itemElement.innerHTML = `
-                <span>${item.nama} (${item.size}) (x${item.quantity})</span>
-                <span>Rp ${itemTotal.toLocaleString('id-ID')}</span>
-            `;
-            orderItemsContainer.appendChild(itemElement);
-        });
+    checkoutData.items.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'flex justify-between border-b py-2';
+        const itemTotal = calculateItemPrice(item.harga, item.size) * item.quantity;
+        itemElement.innerHTML = `
+            <span>${item.nama} (${item.size}) (x${item.quantity})</span>
+            <span>Rp ${itemTotal.toLocaleString('id-ID')}</span>
+        `;
+        orderItemsContainer.appendChild(itemElement);
+    });
 
-        const subtotal = checkoutData.items.reduce((total, item) => {
-            return total + (calculateItemPrice(item.harga, item.size) * item.quantity);
-        }, 0);
-        const totalWithShipping = subtotal;
+    const subtotal = checkoutData.items.reduce((total, item) => {
+        return total + (calculateItemPrice(item.harga, item.size) * item.quantity);
+    }, 0);
 
-        orderTotalElement.innerText = `Rp ${totalWithShipping.toLocaleString('id-ID')}`;
-    } else {
-        orderItemsContainer.innerHTML = '<p class="text-red-500">Keranjang belanja kosong!</p>';
-    }
+    const tax = subtotal * 0.11; // Pajak 11%
+    const totalWithTax = subtotal + tax; // Total setelah pajak
+
+    // Menampilkan ringkasan pesanan dengan pajak di sebelah kiri
+    orderTotalElement.innerHTML = `
+        <div class="flex justify-between">
+            <span>Subtotal:</span>
+            <span>Rp ${subtotal.toLocaleString('id-ID')}</span>
+        </div>
+        <div class="flex justify-between">
+            <span>Pajak (11%):</span>
+            <span>Rp ${tax.toLocaleString('id-ID')}</span>
+        </div>
+        <div class="flex justify-between font-bold border-t mt-2 pt-2">
+            <span>Total Harga:</span>
+            <span>Rp ${totalWithTax.toLocaleString('id-ID')}</span>
+        </div>
+    `;
+} else {
+    orderItemsContainer.innerHTML = '<p class="text-red-500">Keranjang belanja kosong!</p>';
+}
+
 
     function calculateItemPrice(price, size) {
         let adjustedPrice = price;
@@ -224,11 +232,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            function addPrefix() {
+                let input = document.getElementById('eWalletNumber');
+                if (!input.value.startsWith('+62')) {
+                    input.value = '+62';
+                }
+            }
+
+            function preventDeletePrefix() {
+                let input = document.getElementById('eWalletNumber');
+                if (!input.value.startsWith('+62')) {
+                    input.value = '+62' + input.value.replace(/[^0-9]/g, '');
+                }
+            }
+
             let subtotal = checkoutData.items.reduce((total, item) => {
                 return total + (calculateItemPrice(item.harga, item.size) * item.quantity);
             }, 0);
 
-            const totalWithShipping = subtotal;
+            const tax = subtotal * 0.11; // Pajak 11%
+            const totalWithTax = subtotal + tax;
 
             const orderData = {
                 name,
@@ -236,7 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 paymentDetails,
                 items: checkoutData.items,
                 subtotal,
-                total: totalWithShipping
+                tax,
+                total: totalWithTax
             };
 
             console.log(orderData);
@@ -264,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Terjadi kesalahan. Silakan coba lagi.');
         }
     };
+    
 });
 </script>
 </body>

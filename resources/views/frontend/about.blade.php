@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>About Us - Cafe Senja</title>
+    <title>About Us - Cafe KuyBrew</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,7 +26,7 @@
 
 <header class="from-[#4b2c01] to-[#8B4513] text-white py-8 text-center mb-12">
     <h1 class="font-[Playfair Display] text-5xl text-shadow-lg mb-4">
-        <i class="fas fa-coffee mr-2"></i>Cafe Senja
+        <i class="fas fa-coffee mr-2"></i>Cafe KuyBrew
     </h1>
     <div class="flex items-center justify-between bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 py-8 shadow-md">
         <!-- Bagian Kiri (Kosong atau Tambahan Ikon) -->
@@ -159,9 +159,9 @@
 <!-- Content -->
     <div class="bg-gradient-to-br from-[#4b2c01]/30 to-[#8B4513]/30 container mx-auto px-4 mb-8 py-4">
         <section class="mb-8 text-white">
-            <h2 class="text-3xl font-bold mb-4">Welcome to Cafe Senja</h2>
+            <h2 class="text-3xl font-bold mb-4">Welcome to Cafe KuyBrew</h2>
             <p class="text-white-600 leading-relaxed mb-4">
-                Di Cafe Senja, kami percaya bahwa setiap cangkir kopi memiliki cerita. Kami berdedikasi untuk menyajikan kopi berkualitas tinggi yang tidak hanya memanjakan lidah, tetapi juga memberikan pengalaman yang tak terlupakan.
+                Di Cafe KuyBrew, kami percaya bahwa setiap cangkir kopi memiliki cerita. Kami berdedikasi untuk menyajikan kopi berkualitas tinggi yang tidak hanya memanjakan lidah, tetapi juga memberikan pengalaman yang tak terlupakan.
             </p>
             <p class="text-white-600 leading-relaxed mb-4">
                 Kami memilih biji kopi terbaik dari petani lokal dan internasional, dan proses pemanggangan kami dilakukan dengan penuh perhatian untuk memastikan cita rasa yang optimal. Setiap minuman yang kami sajikan dibuat dengan cinta dan dedikasi.
@@ -260,7 +260,7 @@
 
     </script>
     <footer class="bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 text-white py-8 text-center">
-        <p>&copy; {{ date('Y') }} Cafe Senja. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} Cafe KuyBrew. All rights reserved.</p>
     </footer>
 </body>
 

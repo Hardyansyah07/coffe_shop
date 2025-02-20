@@ -64,9 +64,8 @@ Route::apiResource('categories', CategoryController::class); // Menambahkan rute
 // Admin Routes (Hanya dapat diakses oleh admin yang sudah login)
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
     // Admin Dashboard (Page utama admin)
-    Route::get('/', function () {
-        return view('admin.orders.dashboard'); // Admin dashboard page
-    })->name('admin.orders.dashboard');
+    Route::get('/', [AdminController::class, 'index'])->name('admin.orders.dashboard');
+
 
     // Rute untuk Menu (Mengelola menu)
     Route::resource('/menu', MenuController::class)->names([

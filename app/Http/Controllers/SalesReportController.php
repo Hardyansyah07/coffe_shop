@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Menu;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SalesReportController extends Controller
 {
@@ -39,6 +40,7 @@ class SalesReportController extends Controller
                 ['total_sold' => $data->total_sold, 'total_revenue' => $data->total_revenue]
             );
         }
+        Alert::success('Berhasil', 'Laporan penjualan berhasil dibuat!')->autoclose(1500);
 
         return redirect()->route('admin.sales_reports.index')->with('success', 'Laporan penjualan berhasil dibuat!');
     }

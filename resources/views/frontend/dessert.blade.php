@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cafe Senja - Menu</title>
+    <title>Cafe KuyBrew - Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -98,6 +98,15 @@
         footer{
             margin-top: auto;
         }
+
+        #notification {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .opacity-100 {
+            opacity: 1 !important;
+        }
     </style>
 </head>
 
@@ -110,7 +119,7 @@
     <body class="font-[Poppins] text-[#2c1810]">
     <header class="from-[#4b2c01] to-[#8B4513] text-white py-8 text-center mb-12">
     <h1 class="font-[Playfair Display] text-5xl text-shadow-lg mb-4">
-        <i class="fas fa-coffee mr-2"></i>Cafe Senja
+        <i class="fas fa-coffee mr-2"></i>Cafe KuyBrew
     </h1>
     <div class="flex items-center justify-between bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 py-8 shadow-md">
         <!-- Bagian Kiri (Kosong atau Tambahan Ikon) -->
@@ -243,7 +252,7 @@
 <div class="container mx-auto px-4 flex-grow">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
         @foreach ($menus as $menu)
-            @if ($menu->category_id === '7')
+            @if ($menu->categories->nama === 'Dessert')
             <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-all hover:translate-y-[-10px] hover:shadow-2xl">
                 <img src="{{ asset('/storage/menus/' . $menu->image) }}" class="w-full h-64 object-cover transition-all hover:scale-105" alt="{{ $menu->nama }}">
                 <div class="p-6">
@@ -253,7 +262,7 @@
                         {!! $menu->deskripsi !!}
                     </p>
                     <select class="w-full p-3 mb-4 border border-gray-300 rounded-lg bg-gray-50" id="size-{{ $menu->id }}">
-                        @if($menu->categories->nama === 'Makanan') <!-- Ganti dengan kondisi yang sesuai untuk memeriksa kategori -->
+                        @if($menu->categories->nama === 'Dessert') <!-- Ganti dengan kondisi yang sesuai untuk memeriksa kategori -->
                             <option value="level 0">Level 0</option>
                             <option value="level 1">Level 1 (+Rp 1.000)</option>
                             <option value="level 2">Level 2 (+Rp 2.000)</option>
@@ -291,8 +300,12 @@
         </div>
     </div>
     
+    <div id="notification" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-500">
+        Item berhasil ditambahkan ke keranjang!
+    </div>
+
     <footer class="bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 text-white py-8 text-center">
-        <p>&copy; {{ date('Y') }} Cafe Senja. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} Cafe KuyBrew. All rights reserved.</p>
     </footer>
 
     <script>
@@ -504,6 +517,20 @@
         updateCart();
         window.location.href = '/checkout';
     };
+
+    // Event listener untuk tombol "Tambah ke Keranjang"
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const nama = this.getAttribute('data-nama');
+            const harga = parseFloat(this.getAttribute('data-harga'));
+            const size = document.getElementById(`size-${id}`).value;
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartBadge();
+            showNotification(); // Panggil fungsi notifikasi
+        });
+    });
 
     // Inisialisasi awal
     updateCartBadge();

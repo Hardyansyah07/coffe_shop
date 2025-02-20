@@ -9,11 +9,43 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AdminController extends Controller
 {
-    // Menampilkan daftar menu di halaman admin
+    // Dashboard Admin
     public function index()
+    {
+        // Ambil jumlah total pesanan
+        $totalOrders = Order::count();
+
+        // Hitung total pendapatan hari ini
+        $totalRevenue = Order::whereDate('created_at', today())->sum('subtotal');
+
+        // Ambil jumlah total pengguna
+        $totalUsers = User::count();
+
+        // Ambil pesanan terbaru (5 terakhir)
+        $recentOrders = Order::orderBy('created_at', 'desc')->take(5)->get();
+
+        // Ambil data pendapatan 7 hari terakhir
+        $revenueData = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(subtotal) as total'))
+                            ->whereBetween('created_at', [now()->subDays(6), now()])
+                            ->groupBy('date')
+                            ->orderBy('date', 'asc')
+                            ->get();
+
+        // Format data untuk Chart.js
+        $revenueLabels = $revenueData->pluck('date');
+        $revenueData = $revenueData->pluck('total');
+
+        // Kirim data ke view
+        return view('admin.orders.dashboard', compact('totalOrders', 'totalRevenue', 'totalUsers', 'recentOrders', 'revenueLabels', 'revenueData'));
+    }
+
+    // Menampilkan daftar menu di halaman admin
+    public function menuIndex()
     {
         $menu = Menu::latest()->paginate(5);
         return view('admin.menu.index', compact('menu'));
@@ -109,6 +141,7 @@ class AdminController extends Controller
         $menu = Menu::findOrFail($id);
         $menu->is_active = !$menu->is_active; // Toggle nilai is_active
         $menu->save();
+        Alert::success('Berhasil')->autoclose(1500);
     
         return response()->json(['success' => true, 'is_active' => $menu->is_active]);
     }
@@ -151,6 +184,7 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $user->role = $request->input('role');
         $user->save();
+        Alert::success('Berhasil', 'Peran pengguna berhasil diperbarui.')->autoclose(1500);
 
         return redirect()->route('admin.users')->with('success', 'Peran pengguna berhasil diperbarui.');
     }
@@ -160,6 +194,7 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
+        Alert::success('Berhasil', 'Pengguna berhasil dihapus.')->autoclose(1500);
 
         return redirect()->route('admin.users')->with('success', 'Pengguna berhasil dihapus.');
     }

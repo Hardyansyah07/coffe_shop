@@ -1,71 +1,109 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\Orderitem;
-use App\Models\Menu;
+use App\Models\OrderItem;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class OrderController extends Controller
 {
     public function checkout(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
-            'no_meja' => 'required',
-            'payment_method' => 'required',
-            'payment_details' => 'required_if:payment_method,Bank Transfer',
+            'nama' => 'required|string|max:255',
+            'no_meja' => 'required|integer|min:1',
+            'payment_method' => 'required|in:Cash,Bank Transfer,E-Wallet',
+            'payment_details' => 'required_if:payment_method,Bank Transfer|array',
+            'uang_dibayar' => 'nullable|numeric|min:0|required_if:payment_method,Cash',
         ]);
 
-        // Hitung total harga dari session cart
         $cart = session('cart', []);
-        $totalHarga = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+        if (empty($cart)) {
+            return redirect()->back()->with('error', 'Keranjang belanja kosong!');
+        }
 
-        // Buat pesanan baru dengan status pembayaran dan status pesanan yang terpisah
+        $totalHarga = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
+
+        if ($request->payment_method === 'Cash' && $request->uang_dibayar < $totalHarga) {
+            return redirect()->back()->with('error', 'Uang yang dibayarkan kurang dari total harga!');
+        }
+
+        $tax = $totalHarga * 0.11; // Pajak 11%
+        $totalSetelahPajak = $totalHarga + $tax; // Total setelah pajak
+
+        $uangDibayar = $request->payment_method === 'Cash' ? $request->uang_dibayar : $totalSetelahPajak;
+        $kembalian = $request->payment_method === 'Cash' ? $uangDibayar - $totalSetelahPajak : 0;
+
         $order = Order::create([
             'name' => $request->nama,
-            'no_meja' => $request->no_meja, // Perbaikan dari no_telepon ke no_meja
-            'subtotal' => $totalHarga,
-            'payment_status' => 'pending', // Default pembayaran menunggu
-            'order_status' => 'pending', // Default pesanan belum diproses
+            'no_meja' => $request->no_meja,
+            'subtotal' => $totalHarga, // Subtotal sebelum pajak
+            'tax' => $tax, // Pajak 11%
+            'total' => $totalSetelahPajak, // Total setelah pajak
+            'uang_dibayar' => $uangDibayar,
+            'kembalian' => $kembalian,
+            'payment_status' => 'pending',
+            'order_status' => 'pending',
             'payment_method' => $request->payment_method,
-            'payment_details' => json_encode($request->payment_details), // Simpan sebagai JSON
+            'payment_details' => json_encode($request->payment_method === 'Bank Transfer' ? $request->payment_details : []),
         ]);
 
-        // Simpan detail pesanan ke tabel order_items
         foreach ($cart as $id => $details) {
-            $order->items()->create([
+            OrderItem::create([
+                'order_id' => $order->id,
                 'menu_id' => $id,
                 'harga' => $details['price'],
                 'jumlah' => $details['quantity'],
+                'total_harga' => $details['price'] * $details['quantity'],
             ]);
         }
 
-        // Hapus keranjang setelah checkout
         session()->forget('cart');
 
+        Alert::success('Berhasil', 'Pesanan berhasil dibuat!');
         return redirect()->route('frontend.menu')->with('success', 'Pesanan berhasil dibuat!');
     }
 
-    // Fungsi untuk memperbarui status pembayaran
-    public function updatePaymentStatus($id, Request $request)
+    public function updatePaymentStatus(Request $request, $id)
     {
-      
+        $request->validate([
+            'status' => 'required|in:pending,paid,failed',
+            'uang_dibayar' => 'nullable|numeric|min:0',
+        ]);
+    
         $order = Order::findOrFail($id);
-        $order->payment_status = $request->status;
-        $order->save();
-
-
+    
+        // Hitung kembalian jika metode pembayaran adalah Cash
+        $kembalian = $request->uang_dibayar ? max($request->uang_dibayar - $order->subtotal, 0) : 0;
+    
+        // Update status pembayaran, uang dibayar & kembalian
+        $order->update([
+            'payment_status' => $request->status,
+            'uang_dibayar' => $request->uang_dibayar,
+            'kembalian' => $kembalian,
+        ]);
+    
+        Alert::success('Berhasil', 'Status pembayaran diperbarui.');
         return redirect()->back()->with('success', 'Status pembayaran diperbarui.');
     }
+    
 
-    // Fungsi untuk memperbarui status pesanan
-    public function updateOrderStatus($id, Request $request)
-    {
-        $order = Order::findOrFail($id);
-        $order->order_status = $request->status;
-        $order->save();
 
-        return redirect()->back()->with('success', 'Status pesanan diperbarui.');
-    }
+public function updateOrderStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:pending,processing,completed,cancelled',
+    ]);
+
+    $order = Order::findOrFail($id);
+
+    // Update status pesanan
+    $order->update(['order_status' => $request->status]);
+
+    Alert::success('Berhasil', 'Status pesanan diperbarui.');
+    return redirect()->back()->with('success', 'Status pesanan diperbarui.');
+}
+
 }

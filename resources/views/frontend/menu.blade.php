@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cafe Senja - Menu</title>
+    <title>Cafe KuyBrew - Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -95,6 +95,16 @@
             cursor: pointer;
             color: #000; /* Color of the close button */
         }
+
+        #notification {
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .opacity-100 {
+            opacity: 1 !important;
+        }
+
     </style>
 </head>
 
@@ -107,7 +117,7 @@
     <body class="font-[Poppins] text-[#2c1810]">
     <header class="from-[#4b2c01] to-[#8B4513] text-white py-8 text-center mb-12">
     <h1 class="font-[Playfair Display] text-5xl text-shadow-lg mb-4">
-        <i class="fas fa-coffee mr-2"></i>Cafe Senja
+        <i class="fas fa-coffee mr-2"></i>Cafe KuyBrew
     </h1>
     <div class="flex items-center justify-between bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 py-8 shadow-md">
         <!-- Bagian Kiri (Kosong atau Tambahan Ikon) -->
@@ -288,8 +298,13 @@
         </div>
     </div>
     
+    <div id="notification" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-500">
+        Item berhasil ditambahkan ke keranjang!
+    </div>
+
+
     <footer class="bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 text-white py-8 text-center">
-        <p>&copy; {{ date('Y') }} Cafe Senja. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} Cafe KuyBrew. All rights reserved.</p>
     </footer>
 
     <script>
@@ -500,6 +515,32 @@
         updateCart();
         window.location.href = '/checkout';
     };
+
+    // Fungsi untuk menampilkan notifikasi
+    function showNotification() {
+        const notification = document.getElementById('notification');
+        notification.classList.remove('hidden'); // Tampilkan notifikasi
+        notification.classList.add('opacity-100'); // Tambahkan efek transisi
+
+        setTimeout(() => {
+            notification.classList.add('hidden'); // Sembunyikan setelah 2 detik
+            notification.classList.remove('opacity-100');
+        }, 2000);
+    }
+
+    // Event listener untuk tombol "Tambah ke Keranjang"
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const nama = this.getAttribute('data-nama');
+            const harga = parseFloat(this.getAttribute('data-harga'));
+            const size = document.getElementById(`size-${id}`).value;
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartBadge();
+            showNotification(); // Panggil fungsi notifikasi
+        });
+    });
 
     // Inisialisasi awal
     updateCartBadge();

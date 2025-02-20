@@ -56,6 +56,7 @@ class CategoryController extends Controller
 $category->update([
             'nama' => $request->nama,
         ]);
+        Alert::success('Berhasil', 'Category berhasil diperbarui.')->autoclose(1500);
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }
@@ -63,6 +64,7 @@ $category->update([
     public function destroy(Category $category)
     {
         $category->delete();
+        Alert::success('Berhasil', 'Category berhasil dihapus')->autoclose(1500);
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

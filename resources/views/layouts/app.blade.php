@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Cafe Senja') }} - Cafe Senja Admin</title>
+    <title>{{ config('app.name', 'Cafe KuyBrew') }} - Cafe KuyBrew Admin</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -71,38 +71,49 @@
 <nav class="bg-[var(--primary-color)] text-[var(--light-color)] shadow-md w-64 p-6 flex flex-col">
     <!-- Brand -->
     <a href="{{ url('/') }}" class="font-bold text-xl flex items-center mb-8">
-        <i class="fas fa-coffee mr-2"></i>Cafe Senja
+        <i class="fas fa-coffee mr-2"></i>Cafe KuyBrew
     </a>
 
-    <ul class="nav flex-column">
+    <ul class="nav flex-col space-y-2">
         @if(auth()->check() && auth()->user()->role === 'admin')
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.menu.index') }}">
-                    <i class="fas fa-utensils mr-2"></i>Menu
+            <li>
+                <a class="nav-link flex items-center p-2 rounded-md hover:bg-gray-700" href="{{ route('admin.orders.dashboard') }}">
+                    <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
                 </a>
             </li>
-            <hr class="white">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.categories.index') }}">
-                    <i class="fas fa-list-alt mr-2"></i>Daftar Kategori
+            <li>
+                <a class="nav-link flex items-center p-2 rounded-md hover:bg-gray-700" href="{{ route('admin.menu.index') }}">
+                    <i class="fas fa-utensils mr-3"></i>Menu
                 </a>
             </li>
-            <hr class="white">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.orders') }}">
-                    <i class="fas fa-wallet mr-2"></i>Daftar Pememasanan
+            <li>
+                <a class="nav-link flex items-center p-2 rounded-md hover:bg-gray-700" href="{{ route('admin.categories.index') }}">
+                    <i class="fas fa-list-alt mr-3"></i>Daftar Kategori
                 </a>
             </li>
-            <hr class="white">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.sales_reports.index') }}">
-                    <i class="fas fa-file-invoice-dollar mr-2"></i>Laporan Penjualan
+            <li>
+                <a class="nav-link flex items-center p-2 rounded-md hover:bg-gray-700 relative" href="{{ route('admin.orders') }}">
+                    <i class="fas fa-wallet mr-3"></i> Daftar Pesanan
+                    @if($newOrdersCount > 0)
+                        <span class="bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1 absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
+                            {{ $newOrdersCount }}
+                        </span>
+                    @endif
                 </a>
             </li>
-            <hr>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.users') }}">
-                    <i class="fas fa-user mr-2"></i>Daftar Pengguna
+            <li>
+                <a class="nav-link flex items-center p-2 rounded-md hover:bg-gray-700" href="{{ route('admin.sales_reports.index') }}">
+                    <i class="fas fa-file-invoice-dollar mr-3"></i>Laporan Penjualan
+                </a>
+            </li>
+            <li>
+                <a class="nav-link flex items-center p-2 rounded-md hover:bg-gray-700 relative" href="{{ route('admin.users') }}">
+                    <i class="fas fa-user mr-3"></i> Daftar Pengguna
+                    @if($newUsersCount > 0)
+                        <span class="bg-blue-500 text-white text-xs font-bold rounded-full px-2 py-1 absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
+                            {{ $newUsersCount }}
+                        </span>
+                    @endif
                 </a>
             </li>
         @endif

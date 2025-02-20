@@ -11,19 +11,26 @@ use RealRashid\SweetAlert\Facades\Alert;
 class MenuController extends Controller
 {
     // Fungsi untuk menampilkan daftar menu di halaman admin
-    public function index()
+    public function index(Request $request)
     {
-        $menu = Menu::latest()->paginate(5);
-        return view('admin.menu.index', compact('menu')); // Kirim variabel ke tampilan
-    }
-
-    // Fungsi untuk menampilkan halaman tambah menu
-    public function create()
-    {
+        $search = $request->input('search');
+        $category = $request->input('category');
+    
+        // Ambil daftar kategori
         $categories = Category::all();
-        return view('admin.menu.create', compact('categories')); // Mengembalikan tampilan untuk menambahkan menu baru
+    
+        // Query menu dengan pencarian dan filter kategori
+        $menu = Menu::when($search, function ($query) use ($search) {
+                    return $query->where('nama', 'like', "%{$search}%");
+                })
+                ->when($category, function ($query) use ($category) {
+                    return $query->where('category_id', $category);
+                })
+                ->paginate(10);
+    
+        return view('admin.menu.index', compact('menu', 'categories'));
     }
-
+    
     // Fungsi untuk menyimpan data menu baru ke database
     public function store(Request $request)
     {
@@ -92,6 +99,7 @@ class MenuController extends Controller
         }
 
         $menu->save(); // Simpan perubahan menu ke database
+        Alert::success('Berhasil', 'Menu berhasil diperbarui!')->autoclose(1500);
 
         return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil diperbarui!');
     }
@@ -107,6 +115,7 @@ class MenuController extends Controller
         }
 
         $menu->delete(); // Hapus menu dari database
+        Alert::success('Berhasil', 'Menu berhasil dihapus!')->autoclose(1500);
 
         return redirect()->route('admin.menu.index')->with('success', 'Menu berhasil dihapus!');
     }
@@ -135,5 +144,68 @@ class MenuController extends Controller
         $categories = Category::all();
         
         return view('frontend.menu', compact('menus', 'categories'));  // Kirim ke tampilan
+    }
+
+     public function showFrontendKopi()
+    {
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
+        $categories = Category::all();
+        
+        return view('frontend.kopi', compact('menus', 'categories'));  // Kirim ke tampilan
+    }
+
+        public function showFrontendNonkopi()
+    {
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
+        $categories = Category::all();
+        
+        return view('frontend.nonkopi', compact('menus', 'categories'));  // Kirim ke tampilan
+    }
+
+    public function showFrontendMinuman()
+    {
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
+        $categories = Category::all();
+        
+        return view('frontend.minuman', compact('menus', 'categories'));  // Kirim ke tampilan
+    }
+
+    public function showFrontendPaket()
+    {
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
+        $categories = Category::all();
+        
+        return view('frontend.paket', compact('menus', 'categories'));  // Kirim ke tampilan
+    }
+
+    public function showFrontendCemilan()
+    {
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
+        $categories = Category::all();
+        
+        return view('frontend.cemilan', compact('menus', 'categories'));  // Kirim ke tampilan
+    }
+
+    public function showFrontendDessert()
+    {
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
+        $categories = Category::all();
+        
+        return view('frontend.dessert', compact('menus', 'categories'));  // Kirim ke tampilan
+    }
+
+    public function showFrontendMakanan()
+    {
+        // Ambil menu yang statusnya ON (status = 1)
+        $menus = Menu::where('is_active', 1)->get();
+        $categories = Category::all();
+        
+        return view('frontend.makanan', compact('menus', 'categories'));  // Kirim ke tampilan
     }
 }
