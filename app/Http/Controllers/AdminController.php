@@ -21,7 +21,7 @@ class AdminController extends Controller
         $totalOrders = Order::count();
 
         // Hitung total pendapatan hari ini
-        $totalRevenue = Order::whereDate('created_at', today())->sum('subtotal');
+        $totalRevenue = Order::whereDate('created_at', today())->sum('total');
 
         // Ambil jumlah total pengguna
         $totalUsers = User::count();

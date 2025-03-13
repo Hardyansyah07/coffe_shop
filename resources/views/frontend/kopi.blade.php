@@ -259,7 +259,7 @@
                         {!! $menu->deskripsi !!}
                     </p>
                     <select class="w-full p-3 mb-4 border border-gray-300 rounded-lg bg-gray-50" id="size-{{ $menu->id }}">
-                        @if($menu->category_id === '1') <!-- Ganti dengan kondisi yang sesuai untuk memeriksa kategori -->
+                        @if($menu->categories->nama === 'Kopi') <!-- Ganti dengan kondisi yang sesuai untuk memeriksa kategori -->
                             <option value="level 0">Level 0</option>
                             <option value="level 1">Level 1 (+Rp 1.000)</option>
                             <option value="level 2">Level 2 (+Rp 2.000)</option>
@@ -300,7 +300,8 @@
     <div id="notification" class="hidden fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-500">
         Item berhasil ditambahkan ke keranjang!
     </div>
-    
+
+
     <footer class="bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 text-white py-8 text-center">
         <p>&copy; {{ date('Y') }} Cafe KuyBrew. All rights reserved.</p>
     </footer>
@@ -452,37 +453,51 @@
     }
 
     // Menambahkan item ke keranjang
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', () => {
-            if (!isLoggedIn) {
-                alert('Anda harus login terlebih dahulu untuk menambahkan item ke keranjang.');
-                window.location.href = '/login';
-                return;
-            }
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+        if (!isLoggedIn) {
+            alert('Anda harus login terlebih dahulu untuk menambahkan item ke keranjang.');
+            window.location.href = '/login';
+            return;
+        }
 
-            const id = button.dataset.id;
-            const nama = button.dataset.nama;
-            const basePrice = parseInt(button.dataset.harga);
-            const size = document.getElementById(`size-${id}`).value;
+        const id = button.dataset.id;
+        const nama = button.dataset.nama;
+        const basePrice = parseInt(button.dataset.harga);
+        const size = document.getElementById(`size-${id}`).value;
 
-            const existingItem = cart.find(item => item.id === id && item.size === size);
-            if (existingItem) {
+        // Mengecek apakah stok item masih tersedia
+        const availableStock = parseInt(button.dataset.stok); // Ambil stok yang tersedia dari dataset
+        const existingItem = cart.find(item => item.id === id && item.size === size);
+
+        if (availableStock <= 0) {
+            showOutOfStockNotification(nama);  // Menampilkan notifikasi stok habis
+            return; // Jika stok habis, hentikan proses menambahkan ke keranjang
+        }
+
+        if (existingItem) {
+            // Jika item sudah ada di keranjang, hanya tambahkan quantity
+            if (existingItem.quantity < availableStock) {
                 existingItem.quantity++;
             } else {
-                cart.push({
-                    id,
-                    nama,
-                    harga: basePrice,
-                    size,
-                    quantity: 1
-                });
+                alert(`Stok untuk ${nama} tidak mencukupi!`);
+                return;
             }
+        } else {
+            // Jika item belum ada di keranjang, tambahkan item baru
+            cart.push({
+                id,
+                nama,
+                harga: basePrice,
+                size,
+                quantity: 1
+            });
+        }
 
-            updateCart();
-            alert('Item ditambahkan ke keranjang!');
-        });
+        updateCart();
     });
-
+});
+ 
     // Membuka modal keranjang
     document.getElementById('cartButton').onclick = () => {
         const cartModal = document.getElementById('cartModal');
@@ -514,6 +529,18 @@
         updateCart();
         window.location.href = '/checkout';
     };
+
+    // Fungsi untuk menampilkan notifikasi
+    function showNotification() {
+        const notification = document.getElementById('notification');
+        notification.classList.remove('hidden'); // Tampilkan notifikasi
+        notification.classList.add('opacity-100'); // Tambahkan efek transisi
+
+        setTimeout(() => {
+            notification.classList.add('hidden'); // Sembunyikan setelah 2 detik
+            notification.classList.remove('opacity-100');
+        }, 2000);
+    }
 
     // Event listener untuk tombol "Tambah ke Keranjang"
     document.querySelectorAll('.add-to-cart').forEach(button => {

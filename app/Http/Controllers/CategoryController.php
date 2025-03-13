@@ -63,8 +63,15 @@ $category->update([
 
     public function destroy(Category $category)
     {
+        // Cek apakah kategori masih digunakan di tabel menus
+        if ($category->menu()->exists()) {
+            Alert::error('Gagal', 'Kategori ini masih digunakan dalam menu dan tidak dapat dihapus.')->autoClose(1500);
+            return redirect()->route('categories.index')->with('error', 'Kategori masih digunakan dalam menu.');
+        }
+    
+        // Jika tidak digunakan, hapus kategori
         $category->delete();
-        Alert::success('Berhasil', 'Category berhasil dihapus')->autoclose(1500);
+        Alert::success('Berhasil', 'Category berhasil dihapus')->autoClose(1500);
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
     }
 }

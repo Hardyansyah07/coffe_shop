@@ -39,7 +39,7 @@
         <!-- Grafik Pendapatan -->
         <div class="col-md-8 mb-4">
             <div class="card border-0 shadow-sm" style="border-radius: 10px;">
-                <div class="card-header" style="background-color: #795548; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                <div class="card-header" style="background-color: #4b2c01; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
                     <h4>Grafik Pendapatan</h4>
                 </div>
                 <div class="card-body">
@@ -51,12 +51,12 @@
         <!-- Pesanan Terbaru -->
         <div class="col-md-12">
             <div class="card border-0 shadow-sm" style="border-radius: 10px;">
-                <div class="card-header" style="background-color: #795548; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                <div class="card-header" style="background-color: #4b2c01; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
                     <h4>Pesanan Terbaru</h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped table-hover">
-                        <thead class="text-white" style="background-color: #5D4037;">
+                        <thead class="text-white" style="background-color: #4b2c01;">
                             <tr>
                                 <th>ID</th>
                                 <th>Nama</th>
@@ -72,13 +72,13 @@
                                     <td>{{ $order->name }}</td>
                                     <td>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</td>
                                     <td>
-                                        <span class="badge" style="background-color: #8D6E63; color: white;">
+                                        <span class="badge" style="background-color: #4b2c01; color: white;">
                                             {{ $order->order_status }}
                                         </span>
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.orders.items.show', $order->id) }}" class="btn btn-sm text-white"
-                                           style="background-color: #6D4C41; border-radius: 5px;">
+                                           style="background-color: #4b2c01; border-radius: 5px;">
                                             Detail
                                         </a>
                                     </td>

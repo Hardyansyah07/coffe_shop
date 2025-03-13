@@ -11,7 +11,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4b2c01; color: white; border-radius: 5px;">
                     <h5 class="mb-0">{{ __('Menu Management') }}</h5>
                     <div class="d-flex">
                         <form action="{{ route('admin.menu.index') }}" method="GET" class="d-flex">
@@ -42,6 +42,7 @@
                                     <th>Description</th>
                                     <th>Image</th>
                                     <th>Category</th>
+                                    <th>Stok</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -60,6 +61,7 @@
                                             <img src="{{ asset('/storage/menus/' . $data->image) }}" class="menu-image" alt="{{ $data->nama }}">
                                         </td>
                                         <td>{{ optional($data->categories)->nama ?? 'No Category' }}</td>
+                                        <td>{{ $data->stok }}</td>
                                         <td>
                                             <button class="btn btn-sm btn-toggle-status {{ $data->is_active ? 'btn-success' : 'btn-danger' }}" 
                                                     data-id="{{ $data->id }}">

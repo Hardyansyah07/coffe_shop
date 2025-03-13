@@ -454,36 +454,50 @@
     }
 
     // Menambahkan item ke keranjang
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', () => {
-            if (!isLoggedIn) {
-                alert('Anda harus login terlebih dahulu untuk menambahkan item ke keranjang.');
-                window.location.href = '/login';
-                return;
-            }
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', () => {
+        if (!isLoggedIn) {
+            alert('Anda harus login terlebih dahulu untuk menambahkan item ke keranjang.');
+            window.location.href = '/login';
+            return;
+        }
 
-            const id = button.dataset.id;
-            const nama = button.dataset.nama;
-            const basePrice = parseInt(button.dataset.harga);
-            const size = document.getElementById(`size-${id}`).value;
+        const id = button.dataset.id;
+        const nama = button.dataset.nama;
+        const basePrice = parseInt(button.dataset.harga);
+        const size = document.getElementById(`size-${id}`).value;
 
-            const existingItem = cart.find(item => item.id === id && item.size === size);
-            if (existingItem) {
+        // Mengecek apakah stok item masih tersedia
+        const availableStock = parseInt(button.dataset.stok); // Ambil stok yang tersedia dari dataset
+        const existingItem = cart.find(item => item.id === id && item.size === size);
+
+        if (availableStock <= 0) {
+            showOutOfStockNotification(nama);  // Menampilkan notifikasi stok habis
+            return; // Jika stok habis, hentikan proses menambahkan ke keranjang
+        }
+
+        if (existingItem) {
+            // Jika item sudah ada di keranjang, hanya tambahkan quantity
+            if (existingItem.quantity < availableStock) {
                 existingItem.quantity++;
             } else {
-                cart.push({
-                    id,
-                    nama,
-                    harga: basePrice,
-                    size,
-                    quantity: 1
-                });
+                return;
             }
+        } else {
+            // Jika item belum ada di keranjang, tambahkan item baru
+            cart.push({
+                id,
+                nama,
+                harga: basePrice,
+                size,
+                quantity: 1
+            });
+        }
 
-            updateCart();
-        });
+        updateCart();
     });
-
+});
+ 
     // Membuka modal keranjang
     document.getElementById('cartButton').onclick = () => {
         const cartModal = document.getElementById('cartModal');

@@ -20,6 +20,7 @@ class CreateMenusTable extends Migration
             $table->integer('harga');
             $table->string('image');
             $table->string('category_id');
+            $table->integer('stok')->default(0);
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
@@ -35,7 +36,8 @@ class CreateMenusTable extends Migration
         Schema::dropIfExists('menus', function (Blueprint $table){
             $table->dropColumn('is_active');
             $table->dropColumn('category_id');
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->dropColumn('stok');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('restrict');
         });
     }
 }
