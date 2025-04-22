@@ -24,6 +24,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // Endpoint untuk menu (tanpa autentikasi)
 // Route::get('/menus', [MenuController::class, 'index']); // Get semua menu
 Route::get('/menu', [\App\Http\Controllers\MenuController::class, 'indexapi']);
+Route::post('/orders', [OrderController::class, 'store']);
 // Route::post('/menus', [MenuController::class, 'store']); // Tambah menu baru
 // Route::get('/menus/{id}', [MenuController::class, 'show']); // Get detail menu
 // Route::delete('/menus/{id}', [MenuController::class, 'destroy']); // Hapus menu

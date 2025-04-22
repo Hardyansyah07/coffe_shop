@@ -11,7 +11,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20231024/pngtree-aesthetic-blend-roasted-coffee-beans-atop-a-weathered-concrete-surface-image_13690854.png');
+            background-image: url('/images/bg_cafe.png');
             background-size: 100% 100vh; 
             background-position: center;
             background-repeat: no-repeat;
