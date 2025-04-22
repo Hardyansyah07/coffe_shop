@@ -5,7 +5,7 @@
     <div id="nota" class="p-4 border rounded shadow-sm bg-white">
         <div class="text-center mb-4">
             <h3 class="mb-1 font-weight-bold">NOTA PENJUALAN</h3>
-            <h5 class="font-weight-bold text-uppercase">CAFE KUYBREW</h5>
+            <h5 class="font-weight-bold text-uppercase"><i>CAFFE BrewTopia</i></h5>
             <p class="mb-1 font-weight-bold">Rancamanyar</p>
             <p class="mb-3 text-muted">Kabupaten Bandung, Jawa Barat</p>
         </div>
@@ -92,7 +92,7 @@
         </div>
 
         <div class="text-center mt-4">
-            <p class="text-muted">Terima kasih telah berbelanja di Cafe KuyBrew</p>
+            <p class="text-muted">Terima kasih telah berbelanja di <i>CAFFE BrewTopia</i></p>
         </div>
     </div>
 

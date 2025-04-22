@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cafe KuyBrew - Menu</title>
+    <title>CAFFE BrewTopia - Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -119,7 +119,7 @@
     <body class="font-[Poppins] text-[#2c1810]">
     <header class="from-[#4b2c01] to-[#8B4513] text-white py-8 text-center mb-12">
     <h1 class="font-[Playfair Display] text-5xl text-shadow-lg mb-4">
-        <i class="fas fa-coffee mr-2"></i>Cafe KuyBrew
+        <i class="fas fa-coffee mr-2"></i>CAFFE BrewTopia
     </h1>
     <div class="flex items-center justify-between bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 py-8 shadow-md">
         <!-- Bagian Kiri (Kosong atau Tambahan Ikon) -->
@@ -306,7 +306,7 @@
 
 
     <footer class="bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 text-white py-8 text-center">
-        <p>&copy; {{ date('Y') }} Cafe KuyBrew. All rights reserved.</p>
+        <p>&copy; {{ date('Y') }} CAFFE BrewTopia. All rights reserved.</p>
     </footer>
 
     <script>

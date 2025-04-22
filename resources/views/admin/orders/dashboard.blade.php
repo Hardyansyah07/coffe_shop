@@ -7,27 +7,27 @@
 <div class="col-md-12 mb-4">
     <div class="row">
         <div class="col-md-4">
-            <div class="card shadow-sm border-0" style="border-radius: 10px; background-color: white;">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; background-color: #f8f9fa;">
                 <div class="card-body text-center">
-                    <i class="fas fa-shopping-cart fa-3x mb-2" style="color: #4b2c01;"></i>
+                    <i class="fas fa-shopping-cart fa-3x mb-2" style="color: black;"></i>
                     <h5 class="card-title text-dark">Total Pesanan</h5>
                     <p class="card-text fs-4 text-dark">{{ $totalOrders }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card shadow-sm border-0" style="border-radius: 10px; background-color: white;">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; background-color: #f8f9fa;">
                 <div class="card-body text-center">
-                    <i class="fas fa-wallet fa-3x mb-2" style="color: #4b2c01;"></i>
+                    <i class="fas fa-wallet fa-3x mb-2" style="color: black;"></i>
                     <h5 class="card-title text-dark">Pendapatan Hari Ini</h5>
                     <p class="card-text fs-4 text-dark">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card shadow-sm border-0" style="border-radius: 10px; background-color: white;">
+            <div class="card shadow-sm border-0" style="border-radius: 10px; background-color: #f8f9fa;">
                 <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x mb-2" style="color: #4b2c01;"></i>
+                    <i class="fas fa-users fa-3x mb-2" style="color: black;"></i>
                     <h5 class="card-title text-dark">Total Pengguna</h5>
                     <p class="card-text fs-4 text-dark">{{ $totalUsers }}</p>
                 </div>
@@ -38,8 +38,8 @@
 
         <!-- Grafik Pendapatan -->
         <div class="col-md-8 mb-4">
-            <div class="card border-0 shadow-sm" style="border-radius: 10px;">
-                <div class="card-header" style="background-color: #4b2c01; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <div class="card border-0 shadow-sm" style="border-radius: 10px; background-color: #f8f9fa;">
+                <div class="card-header" style="background-color: black; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
                     <h4>Grafik Pendapatan</h4>
                 </div>
                 <div class="card-body">
@@ -50,13 +50,13 @@
 
         <!-- Pesanan Terbaru -->
         <div class="col-md-12">
-            <div class="card border-0 shadow-sm" style="border-radius: 10px;">
-                <div class="card-header" style="background-color: #4b2c01; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+            <div class="card border-0 shadow-sm" style="border-radius: 10px; background-color: #f8f9fa;">
+                <div class="card-header" style="background-color: black; color: white; border-top-left-radius: 10px; border-top-right-radius: 10px;">
                     <h4>Pesanan Terbaru</h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-striped table-hover">
-                        <thead class="text-white" style="background-color: #4b2c01;">
+                        <thead class="text-white" style="background-color: black;">
                             <tr>
                                 <th>ID</th>
                                 <th>Nama</th>
@@ -72,13 +72,13 @@
                                     <td>{{ $order->name }}</td>
                                     <td>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</td>
                                     <td>
-                                        <span class="badge" style="background-color: #4b2c01; color: white;">
+                                        <span class="badge" style="background-color: black; color: white;">
                                             {{ $order->order_status }}
                                         </span>
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.orders.items.show', $order->id) }}" class="btn btn-sm text-white"
-                                           style="background-color: #4b2c01; border-radius: 5px;">
+                                           style="background-color: black; border-radius: 5px;">
                                             Detail
                                         </a>
                                     </td>
@@ -104,8 +104,8 @@
                 datasets: [{
                     label: 'Pendapatan (Rp)',
                     data: @json($revenueData),
-                    borderColor: 'rgba(141, 110, 99, 1)',
-                    backgroundColor: 'rgba(141, 110, 99, 0.2)',
+                    borderColor: 'black',
+                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
                     borderWidth: 2
                 }]
             }
@@ -125,7 +125,7 @@
     }
 
     .table-hover tbody tr:hover {
-        background-color: #F5F5F5;
+        background-color: #E0E0E0;
     }
 
     .badge {

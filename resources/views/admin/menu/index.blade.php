@@ -2,7 +2,106 @@
 
 @section('styles')
 <style>
-    /* Styling seperti sebelumnya */
+    body {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .card {
+        background-color: #111;
+        border: 1px solid #333;
+    }
+
+    .card-header {
+        background-color: #000;
+        color: #fff;
+        border-bottom: 1px solid #444;
+        border-radius: 5px;
+    }
+
+    .form-control {
+        background-color: #222;
+        color: #fff;
+        border: 1px solid #555;
+    }
+
+    .form-control::placeholder {
+        color: #aaa;
+    }
+
+    .btn-outline-light {
+        color: #fff;
+        border-color: #fff;
+    }
+
+    .btn-outline-light:hover {
+        background-color: #fff;
+        color: #000;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #222;
+    }
+
+    .table thead th {
+        color: #fff;
+        background-color: #333;
+        border-color: #444;
+    }
+
+    .table td {
+        color: #fff;
+        border-color: #444;
+    }
+
+    .menu-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border: 1px solid #666;
+        border-radius: 4px;
+    }
+
+    .btn-warning,
+    .btn-danger,
+    .btn-success {
+        color: #fff;
+        border: none;
+    }
+
+    .btn-warning {
+        background-color: #999;
+    }
+
+    .btn-danger {
+        background-color: #c00;
+    }
+
+    .btn-success {
+        background-color: #0a0;
+    }
+
+    .btn-warning:hover,
+    .btn-danger:hover,
+    .btn-success:hover {
+        filter: brightness(1.2);
+    }
+
+    .card-footer {
+        background-color: #000;
+        color: #fff;
+    }
+
+    .pagination .page-link {
+        background-color: #222;
+        color: #fff;
+        border: 1px solid #444;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #fff;
+        color: #000;
+    }
 </style>
 @endsection
 
@@ -11,7 +110,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #4b2c01; color: white; border-radius: 5px;">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">{{ __('Menu Management') }}</h5>
                     <div class="d-flex">
                         <form action="{{ route('admin.menu.index') }}" method="GET" class="d-flex">
@@ -86,7 +185,7 @@
                                     @endif
                                 @empty
                                 <tr>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         <i class="fas fa-coffee fa-3x mb-3"></i>
                                         <h5>No Menu Items Available</h5>
                                         <p class="text-muted">Start by adding your first menu item.</p>
@@ -98,7 +197,7 @@
                     </div>
                 </div>
 
-                <div class="card-footer bg-white">
+                <div class="card-footer">
                     {!! $menu->withQueryString()->links('pagination::bootstrap-4') !!}
                 </div>
             </div>

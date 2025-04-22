@@ -31,6 +31,17 @@ class MenuController extends Controller
         return view('admin.menu.index', compact('menu', 'categories'));
     }
 
+    public function indexapi()
+    {
+        $menu = Menu::all();
+        $res = [
+            'success' => true,
+            'message' => 'Daftar menu',
+            'menu' => $menu,
+        ];
+        return response()->json($res, 200);
+    }
+
     public function create()
     {
         $categories = Category::all();

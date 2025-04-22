@@ -96,34 +96,34 @@
 
                 <!-- Modal Konfirmasi Pembayaran Cash -->
                 <div class="modal fade" id="cashPaymentModal" tabindex="-1" role="dialog" aria-labelledby="cashPaymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cashPaymentModalLabel">Konfirmasi Pembayaran Cash</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="cashPaymentForm" method="POST" action="">
-                @csrf
-                <div class="modal-body">
-                    <p><strong>Total Harga: </strong>Rp <span id="totalSetelahPajak"></span></p>
-                    <div class="form-group">
-                        <label for="uangDibayar">Uang Dibayar</label>
-                        <input type="number" class="form-control" id="uangDibayar" name="uang_dibayar" min="0" required>
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cashPaymentModalLabel">Konfirmasi Pembayaran Cash</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form id="cashPaymentForm" method="POST" action="">
+                                @csrf
+                                <div class="modal-body">
+                                    <p><strong>Total Harga: </strong>Rp <span id="totalSetelahPajak">0</span></p>
+                                    <div class="form-group">
+                                        <label for="uangDibayar">Uang Dibayar</label>
+                                        <input type="number" class="form-control" id="uangDibayar" name="uang_dibayar" min="0" required>
+                                    </div>
+                                    <input type="hidden" id="hiddenUangDibayar" name="uang_dibayar">
+                                    <input type="hidden" id="hiddenKembalian" name="kembalian">
+                                    <p><strong>Kembalian: </strong>Rp <span id="uangKembalian">0</span></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Konfirmasi Pembayaran</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <input type="hidden" id="hiddenKembalian" name="kembalian">
-                    <p><strong>Kembalian: </strong>Rp <span id="uangKembalian">0</span></p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Konfirmasi Pembayaran</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 
             </div>
         </div>
@@ -133,35 +133,36 @@
 
 @section('scripts')
 <script>
-   $('#cashPaymentModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    var orderId = button.data('id');
-    var total = parseFloat(button.data('total'));
+let currentTotal = 0;
 
-    // Set total harga di modal
-    $('#totalSetelahPajak').text(total.toLocaleString('id-ID'));
+$('#cashPaymentModal').on('show.bs.modal', function (event) {
+    let button = $(event.relatedTarget);
+    let orderId = button.data('id');
+    let total = parseFloat(button.data('total'));
 
-    // Reset input uang dibayar dan kembalian saat modal dibuka
+    currentTotal = isNaN(total) ? 0 : total;
+
+    $('#totalSetelahPajak').text(currentTotal.toLocaleString('id-ID'));
     $('#uangDibayar').val('');
     $('#uangKembalian').text('0');
 
-    // Event listener untuk menghitung kembalian
-    $('#uangDibayar').on('input', function () {
-        let uangDibayar = parseFloat($(this).val()) || 0;
-        let kembalian = uangDibayar - total;
+    $('#hiddenUangDibayar').val('');
+    $('#hiddenKembalian').val('0');
 
-        // Tampilkan kembalian di modal
-        $('#uangKembalian').text(kembalian >= 0 ? kembalian.toLocaleString('id-ID') : '0');
-
-        // Update nilai input tersembunyi agar dikirim ke controller
-        $('#hiddenUangDibayar').val(uangDibayar);
-        $('#hiddenKembalian').val(kembalian >= 0 ? kembalian : 0);
-    });
-
-    // Set form action URL (tidak perlu mengirim uang_dibayar di URL, gunakan input hidden)
-    var form = $(this).find('#cashPaymentForm');
-    var actionUrl = "{{ route('orders.updatePayment', ['id' => ':orderId', 'status' => 'paid']) }}".replace(':orderId', orderId);
+    let form = $(this).find('#cashPaymentForm');
+    let actionUrl = "{{ route('orders.updatePayment', ['id' => ':orderId', 'status' => 'paid']) }}"
+        .replace(':orderId', orderId);
     form.attr('action', actionUrl);
+});
+
+// DIPINDAH KE LUAR
+$('#uangDibayar').on('input', function () {
+    let uangDibayar = parseFloat($(this).val()) || 0;
+    let kembalian = uangDibayar - currentTotal;
+
+    $('#uangKembalian').text(kembalian >= 0 ? kembalian.toLocaleString('id-ID') : '0');
+    $('#hiddenUangDibayar').val(uangDibayar);
+    $('#hiddenKembalian').val(kembalian >= 0 ? kembalian : 0);
 });
 </script>
 @endsection

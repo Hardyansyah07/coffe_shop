@@ -3,36 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Cafe KuyBrew</title>
+    <title>Checkout - CAFFE BrewTopia
+CAFFE BrewTopia
+CAF</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        body {
-            background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20231024/pngtree-aesthetic-blend-roasted-coffee-beans-atop-a-weathered-concrete-surface-image_13690854.png');
-            background-size: 100% 100vh; 
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            margin: 0; 
-            height: 100vh; 
-        }
-    </style>
+    body {
+        background-color: #f3f4f6;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    header button {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: #8B4513;
+        box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.2);
+    }
+
+    #paymentMethodModal {
+        backdrop-filter: blur(4px);
+    }
+
+    #paymentMethodModal .bg-white {
+        transition: transform 0.3s ease;
+    }
+
+    #paymentMethodModal.show .bg-white {
+        transform: scale(1.05);
+    }
+</style>
+
 </head>
 
 <body class="from-gray-200 via-gray-300 to-gray-400 min-h-screen flex flex-col items-center">
     
     <!-- Header at the top of the page -->
-    <header class="bg-gradient-to-br from-[#4b2c01]/50 to-[#8B4513]/50 text-white py-4 text-center w-full">
-        <button onclick="window.location.href='/'" class="font-bold text-5xl text-shadow-lg mb-4 focus:outline-none hover:bg-opacity-80 transition duration-300 p-2 rounded">
-        <i class="fas fa-coffee mr-2"></i>Cafe KuyBrew
+    <header class="bg-white shadow-md text-[#4b2c01] py-4 text-center w-full">
+        <button onclick="window.location.href='/'" class="font-bold text-4xl tracking-tight hover:text-[#8B4513] transition">
+            <i class="fas fa-coffee mr-2"></i>CAFFE BrewTopia
         </button>
     </header>
 
     <!-- Main container centered on the page -->
-    <div class="max-w-7xl w-full bg-white p-6 rounded-lg shadow-lg mt-6 flex flex-col md:flex-row gap-6">
+    <div class="max-w-6xl w-full bg-white p-8 rounded-2xl shadow-lg mt-10 flex flex-col md:flex-row gap-8">
         
             <!-- Bagian kiri: Daftar Pesanan -->
             <div class="w-full md:w-2/3">
@@ -40,7 +62,7 @@
                 <div id="orderItems" class="space-y-4"></div>
             </div>
             <!-- Bagian kanan: Total dan Formulir -->
-            <div class="w-full md:w-1/3 bg-gray-50 p-6 rounded-lg">
+            <div class="w-full md:w-1/3 bg-gray-100 p-6 rounded-2xl shadow">
                 <div class="mb-4 border-b pb-2">
                     <p id="orderTotal" class="text-xl font-bold">Rp 0</p>
                 </div>
@@ -68,7 +90,7 @@
                             <option value="e_wallet">E-Wallet</option>
                         </select>
                     </div>
-                    <button type="submit" class="w-full p-4 bg-gradient-to-br from-[#4b2c01] to-[#8B4513] text-white rounded-full text-lg font-medium shadow-lg transform transition-all duration-300 hover:translate-y-[-2px]">
+                    <button type="submit" class="w-full py-3 bg-[#4b2c01] hover:bg-[#5c3514] text-white rounded-xl text-base font-semibold shadow transition duration-300">
                         Konfirmasi Pesanan
                     </button>
                 </form>
@@ -101,8 +123,8 @@
                         </div>
                         
                         <div class="flex justify-end mt-4">
-                            <button type="button" id="closeModal" class="px-4 py-2 bg-gray-300 rounded">Batal</button>
-                            <button type="button" id="savePayment" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded">Simpan</button>
+                        <button type="button" id="closeModal" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded transition">Batal</button>
+                        <button type="button" id="savePayment" class="ml-2 px-4 py-2 bg-[#4b2c01] text-white hover:bg-[#5c3514] rounded transition">Simpan</button>
                         </div>
                     </div>
                 </div>

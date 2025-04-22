@@ -66,30 +66,22 @@ class OrderController extends Controller
         return redirect()->route('frontend.menu')->with('success', 'Pesanan berhasil dibuat!');
     }
 
-    public function updatePaymentStatus(Request $request, $id)
+    public function updatePaymentStatus(Request $request, $id, $status)
     {
-        $request->validate([
-            'status' => 'required|in:pending,paid,failed',
-            'uang_dibayar' => 'nullable|numeric|min:0',
-        ]);
-    
         $order = Order::findOrFail($id);
     
-        // Hitung kembalian jika metode pembayaran adalah Cash
-        $kembalian = $request->uang_dibayar ? max($request->uang_dibayar - $order->subtotal, 0) : 0;
+        if ($status === 'paid') {
+            $order->payment_status = 'paid';
+            $order->uang_dibayar = $request->uang_dibayar;
+            $order->kembalian = $request->kembalian;
+            $order->save();
     
-        // Update status pembayaran, uang dibayar & kembalian
-        $order->update([
-            'payment_status' => $request->status,
-            'uang_dibayar' => $request->uang_dibayar,
-            'kembalian' => $kembalian,
-        ]);
+            return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
+        }
     
-        Alert::success('Berhasil', 'Status pembayaran diperbarui.');
-        return redirect()->back()->with('success', 'Status pembayaran diperbarui.');
+        return redirect()->back()->with('error', 'Status pembayaran tidak valid.');
     }
     
-
 
 public function updateOrderStatus(Request $request, $id)
 {
